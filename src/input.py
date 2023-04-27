@@ -32,9 +32,10 @@ def generate_list_of_jobs():
     start_WS2 = [chr(ord(start_WS1[0]) + n_WS1), 3]
     start_WS3 = [chr(ord(start_WS2[0]) + n_WS2), 3]
 
-    print(start_WS1)
-    print(start_WS2)
-    print(start_WS3)
+    # Check all start cells
+    # print(start_WS1)
+    # print(start_WS2)
+    # print(start_WS3)
 
     job_WS1 = []
     job_WS2 = []
@@ -50,9 +51,12 @@ def generate_list_of_jobs():
         return all_string
 
     # Get all job data value from worksheet with all job cells
-    job_WS1 = [ws[x].value for x in get_jobs(job_WS1, start_WS1, n_job)]
-    job_WS2 = [ws[x].value for x in get_jobs(job_WS2, start_WS2, n_job)]
-    job_WS3 = [ws[x].value for x in get_jobs(job_WS3, start_WS3, n_job)]
+    job_WS1 = [round(ws[x].value, 2)
+               for x in get_jobs(job_WS1, start_WS1, n_job)]
+    job_WS2 = [round(ws[x].value, 2)
+               for x in get_jobs(job_WS2, start_WS2, n_job)]
+    job_WS3 = [round(ws[x].value, 2)
+               for x in get_jobs(job_WS3, start_WS3, n_job)]
 
     print(job_WS1)
     print(job_WS2)
