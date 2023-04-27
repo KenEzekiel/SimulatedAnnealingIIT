@@ -14,17 +14,18 @@ def print_active_worksheet(worksheet):
         print('')
 
 
-def generate_list_of_jobs():
-    workbook = openpyxl.load_workbook("../data/DATA.xlsx")
+def generate_list_of_jobs(num_WS1, num_WS2, num_WS3, num_job):
+    # workbook = openpyxl.load_workbook("../data/DATA.xlsx")
+    workbook = openpyxl.load_workbook("../data/test_data.xlsx")
 
     # Define variable to read the active sheet:
     ws = workbook.active
 
     # Number of workspaces in a WS and number of jobs
-    n_WS1 = 3
-    n_WS2 = 2
-    n_WS3 = 12
-    n_job = 20
+    n_WS1 = num_WS1
+    n_WS2 = num_WS2
+    n_WS3 = num_WS3
+    n_job = num_job
     start_col = "B"
     start_row = 3
 
@@ -63,3 +64,6 @@ def generate_list_of_jobs():
     print(job_WS3)
 
     return job_WS1, job_WS2, job_WS3
+
+
+j, k, l = generate_list_of_jobs(1, 2, 3, 6)
