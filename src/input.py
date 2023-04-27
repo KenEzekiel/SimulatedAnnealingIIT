@@ -64,6 +64,3 @@ def generate_list_of_jobs(num_WS1, num_WS2, num_WS3, num_job):
     print(job_WS3)
 
     return job_WS1, job_WS2, job_WS3
-
-
-j, k, l = generate_list_of_jobs(1, 2, 3, 6)
