@@ -10,7 +10,7 @@ class algo(Enum):
 
 
 class Workstation:
-    name: SystemError = ""
+    name: str = ""
     # Number of total workspaces in the workstation
     # Workstation numbering starts from 0
     num_total: int = 0
@@ -26,6 +26,9 @@ class Workstation:
         self.num_total = num
         self.list_jobs = jobs
         self.type = type
+        self.busy_duration = [[] for i in range(self.num_total)]
+
+    def reset(self):
         self.busy_duration = [[] for i in range(self.num_total)]
 
     # Use one Workstation for a job
@@ -159,7 +162,7 @@ class Workstation:
         if (count_avail > 1):
             # calculate weight then get the smallest weight
             total_duration = []
-            total = 0
+            total = 1
             for i in range(self.num_total):
                 total_duration.append(self.get_total_busy_duration(i))
                 total += total_duration[i]
