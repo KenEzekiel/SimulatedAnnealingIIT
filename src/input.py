@@ -40,6 +40,7 @@ def generate_list_of_jobs(num_WS1, num_WS2, num_WS3, num_job):
     # print(start_WS1)
     # print(start_WS2)
     # print(start_WS3)
+    # print(start_routing)
 
     job_WS1 = []
     job_WS2 = []
@@ -61,13 +62,13 @@ def generate_list_of_jobs(num_WS1, num_WS2, num_WS3, num_job):
                for x in get_jobs(start_WS2, n_job)]
     job_WS3 = [round(ws[x].value, 2)
                for x in get_jobs(start_WS3, n_job)]
-    job_routing = [[int(i) for i in (ws[x].value).split(',')]
+    job_routing = [[int(i) for i in (str(ws[x].value)).split(',')]
                    for x in get_jobs(start_routing, n_job)]
 
     print("Jobs and routing")
-    print(job_WS1)
-    print(job_WS2)
-    print(job_WS3)
-    print(job_routing)
+    print("job WS1: ", job_WS1)
+    print("job WS2: ", job_WS2)
+    print("job WS3: ", job_WS3)
+    print("job routing: ", job_routing)
 
     return job_WS1, job_WS2, job_WS3, job_routing
