@@ -47,6 +47,7 @@ def start(T0: int, M: int, alpha: float, N: int, machine_algorithm: algo, worker
 
     init_makespan = run_sequence(sequence, routing, WS1, WS2,
                                  WS3, machine_algorithm, worker_algorithm)
+    init_makespan = round(init_makespan, 3)
     # Brought out from run_sequence function to also show the state of the workstations at minimal makespan
     WS1.reset()
     WS2.reset()
@@ -75,6 +76,7 @@ def start(T0: int, M: int, alpha: float, N: int, machine_algorithm: algo, worker
 
             makespan = run_sequence(
                 sequence, routing, WS1, WS2, WS3, machine_algorithm, worker_algorithm)
+            makespan = round(makespan, 3)
             # print(sequence, makespan)
             deltaE = makespan - min_makespan
             if (deltaE < 0):
