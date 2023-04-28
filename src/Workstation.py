@@ -46,6 +46,13 @@ class Workstation:
                 count_avail += 1
         return count_avail
 
+    # Get total of busy duration
+    def get_total_busy_duration(self, w_number: int) -> int:
+        ret = 0
+        for i in self.busy_duration[w_number]:
+            ret += i[1] - i[0]
+        return ret
+
     # Abstraction of use_ws with random ws selection if available > 1 ws
     def use_random(self, no_job: int, start: int):
         count_avail = self.count_available(start, no_job)
@@ -70,7 +77,6 @@ class Workstation:
             min_idx = 0
             min = self.busy_duration[0][len(self.busy_duration[0])-1][1]
             for i in range(self.num_total):
-                print(min, min_idx)
                 if self.busy_duration[i][len(self.busy_duration[i])-1][1] < min:
                     min = self.busy_duration[i][len(
                         self.busy_duration[i])-1][1]
@@ -103,7 +109,6 @@ class Workstation:
             min_idx = 0
             min = self.busy_duration[0][len(self.busy_duration[0])-1][1]
             for i in range(self.num_total):
-                print(min, min_idx)
                 if self.busy_duration[i][len(self.busy_duration[i])-1][1] < min:
                     min = self.busy_duration[i][len(
                         self.busy_duration[i])-1][1]
@@ -116,8 +121,20 @@ class Workstation:
         count_avail = self.count_available(start, no_job)
         if (count_avail > 1):
             # calculate weight then get the smallest weight
-            weight = []
+            total_duration = []
+            total = 0
+            for i in range(self.num_total):
+                total_duration.append(self.get_total_busy_duration(i))
+                total += total_duration[i]
+            weight = [[i, total_duration[i]/total]
+                      for i in range(len(total_duration))]
+            # print("weight:", weight)
             # num is the chosen workspace
+            i = 0
+            num = weight[i][0]
+            while not self.is_avail_at_time(num, start, start + self.list_jobs[no_job-1]):
+                i += 1
+                num = weight[i][0]
             self.use_ws(no_job, num, start)
         elif (count_avail == 1):
             # Get the available one
@@ -131,7 +148,6 @@ class Workstation:
             min_idx = 0
             min = self.busy_duration[0][len(self.busy_duration[0])-1][1]
             for i in range(self.num_total):
-                print(min, min_idx)
                 if self.busy_duration[i][len(self.busy_duration[i])-1][1] < min:
                     min = self.busy_duration[i][len(
                         self.busy_duration[i])-1][1]
@@ -163,3 +179,9 @@ WS2.use_random(1, 0)
 WS2.use_random(2, 0)
 WS2.use_random(3, 11)
 print(WS2.busy_duration)
+# print(WS2.get_total_busy_duration(0), WS2.get_total_busy_duration(1))
+WS3.use_small(1, 0)
+WS3.use_small(2, 0)
+WS3.use_small(3, 0)
+WS3.use_lesser(4, 17)
+print(WS3.busy_duration)
