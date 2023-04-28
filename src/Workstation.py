@@ -57,6 +57,15 @@ class Workstation:
             ret += i[1] - i[0]
         return ret
 
+    # Get last end duration of the workstation
+    def get_last_end_duration(self):
+        end = 0
+        for i in range(self.num_total):
+            for j in self.busy_duration[i]:
+                if j[1] > end:
+                    end = j[1]
+        return end
+
     # Abstraction of use_ws with random ws selection if available > 1 ws
     def use_random(self, no_job: int, start: int):
         count_avail = self.count_available(start, no_job)
