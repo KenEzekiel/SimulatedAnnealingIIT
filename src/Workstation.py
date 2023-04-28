@@ -26,8 +26,7 @@ class Workstation:
         end = start + self.list_jobs[no_job-1]
         if (self.is_avail_at_time(w_number, start, end)):
             self.busy_duration[w_number].append([start, end])
-            print(
-                f"job {no_job} is put into {self.name} Workspace {w_number+1} with [{start}, {end}]")
+            # print(f"job {no_job} is put into {self.name} Workspace {w_number+1} with [{start}, {end}]")
         return [start, end]
 
     # Check if the Workstation is available at a time
@@ -88,10 +87,8 @@ class Workstation:
             #         min_idx = i
             found = False
             while not found:
-                print(min, end=" ")
                 for i in range(self.num_total):
                     if self.is_avail_at_time(i, min, min + self.list_jobs[no_job-1]):
-                        print("B", end=" ")
                         min_idx = i
                         found = True
                         break
@@ -130,10 +127,8 @@ class Workstation:
             #         min_idx = i
             found = False
             while not found:
-                print(min, end=" ")
                 for i in range(self.num_total):
                     if self.is_avail_at_time(i, min, min + self.list_jobs[no_job-1]):
-                        print("B", end=" ")
                         min_idx = i
                         found = True
                         break
@@ -180,10 +175,8 @@ class Workstation:
             #         min_idx = i
             found = False
             while not found:
-                print(min, end=" ")
                 for i in range(self.num_total):
                     if self.is_avail_at_time(i, min, min + self.list_jobs[no_job-1]):
-                        print("B", end=" ")
                         min_idx = i
                         found = True
                         break
@@ -225,10 +218,10 @@ def generate_workstation(num_WS1: int, num_WS2: int, num_WS3: int, num_jobs: int
     return WS1, WS2, WS3, routing
 
 
-WS1, WS2, WS3, routing = generate_workstation(1, 2, 3, 6, 0, 0, 0)
-WS1.use_random(1, 0)
-WS1.use_random(3, 0)
-WS1.show_workspace()
+# WS1, WS2, WS3, routing = generate_workstation(1, 2, 3, 6, 0, 0, 0)
+# WS1.use_random(1, 0)
+# WS1.use_random(3, 0)
+# WS1.show_workspace()
 # print(WS1.busy_duration)
 # WS2.use_random(1, 0)
 # WS2.use_random(2, 0)
