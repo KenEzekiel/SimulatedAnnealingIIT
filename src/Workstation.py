@@ -3,6 +3,7 @@ from input import generate_list_of_jobs
 
 
 class Workstation:
+    name: SystemError = ""
     # Number of total workspaces in the workstation
     # Workstation numbering starts from 0
     num_total: int = 0
@@ -13,7 +14,8 @@ class Workstation:
     # matrix with n row = n workspaces, filled with [x,y] with x start busy duration and y end busy duration
     busy_duration: list = []
 
-    def __init__(self, num: int, jobs: list, type: int):
+    def __init__(self, name: str, num: int, jobs: list, type: int):
+        self.name = name
         self.num_total = num
         self.list_jobs = jobs
         self.type = type
@@ -24,6 +26,9 @@ class Workstation:
         end = start + self.list_jobs[no_job-1]
         if (self.is_avail_at_time(w_number, start, end)):
             self.busy_duration[w_number].append([start, end])
+            print(
+                f"job {no_job} is put into {self.name} Workspace {w_number+1} with [{start}, {end}]")
+        return [start, end]
 
     # Check if the Workstation is available at a time
     def is_avail_at_time(self, w_number: int, start: int, end: int) -> bool:
@@ -31,7 +36,7 @@ class Workstation:
         count = 0
         # start time is not included in all busy time
         for i in self.busy_duration[w_number]:
-            if (start < i[0] and end < i[0]) or start > i[1]:
+            if (start < i[0] and end <= i[0]) or start >= i[1]:
                 count += 1
         if count == len(self.busy_duration[w_number]):
             not_busy = True
@@ -64,25 +69,36 @@ class Workstation:
                 if self.is_avail_at_time(num, start, start + self.list_jobs[no_job-1]):
                     success = True
             # num is the chosen workspace
-            self.use_ws(no_job, num, start)
+            return self.use_ws(no_job, num, start)
         elif (count_avail == 1):
-            # Get the available one
+            # Get the first available one
             for i in range(self.num_total):
                 end = start + self.list_jobs[no_job-1]
                 if (self.is_avail_at_time(i, start, end)):
                     num = i
-            self.use_ws(no_job, num, start)
+            return self.use_ws(no_job, num, start)
         else:
             # No ws available currently, get the ws with fastest availability
-            min_idx = 0
-            min = self.busy_duration[0][len(self.busy_duration[0])-1][1]
-            for i in range(self.num_total):
-                if self.busy_duration[i][len(self.busy_duration[i])-1][1] < min:
-                    min = self.busy_duration[i][len(
-                        self.busy_duration[i])-1][1]
-                    min_idx = i
+            min = start
+            # min = self.busy_duration[0][len(self.busy_duration[0])-1][1]
+            # for i in range(self.num_total):
+            #     if self.busy_duration[i][len(self.busy_duration[i])-1][1] < min:
+            #         min = self.busy_duration[i][len(
+            #             self.busy_duration[i])-1][1]
+            #         min_idx = i
+            found = False
+            while not found:
+                print(min, end=" ")
+                for i in range(self.num_total):
+                    if self.is_avail_at_time(i, min, min + self.list_jobs[no_job-1]):
+                        print("B", end=" ")
+                        min_idx = i
+                        found = True
+                        break
+                if not found:
+                    min += 1
             # min_idx is the chosen workspace
-            self.use_ws(no_job, min_idx, min+1)
+            return self.use_ws(no_job, min_idx, min)
 
     # Abstraction of use_ws with small ws selection if available > 1 ws
 
@@ -95,26 +111,36 @@ class Workstation:
                     num = i
                     break
             # num is the chosen workspace
-            self.use_ws(no_job, num, start)
+            return self.use_ws(no_job, num, start)
         elif (count_avail == 1):
-            # Get the available one
+            # Get the first available one
             for i in range(self.num_total):
                 end = start + self.list_jobs[no_job-1]
                 if (self.is_avail_at_time(i, start, end)):
                     num = i
-            self.use_ws(no_job, num, start)
+            return self.use_ws(no_job, num, start)
         else:
-
             # No ws available currently, get the ws with fastest availability
-            min_idx = 0
-            min = self.busy_duration[0][len(self.busy_duration[0])-1][1]
-            for i in range(self.num_total):
-                if self.busy_duration[i][len(self.busy_duration[i])-1][1] < min:
-                    min = self.busy_duration[i][len(
-                        self.busy_duration[i])-1][1]
-                    min_idx = i
+            min = start
+            # min = self.busy_duration[0][len(self.busy_duration[0])-1][1]
+            # for i in range(self.num_total):
+            #     if self.busy_duration[i][len(self.busy_duration[i])-1][1] < min:
+            #         min = self.busy_duration[i][len(
+            #             self.busy_duration[i])-1][1]
+            #         min_idx = i
+            found = False
+            while not found:
+                print(min, end=" ")
+                for i in range(self.num_total):
+                    if self.is_avail_at_time(i, min, min + self.list_jobs[no_job-1]):
+                        print("B", end=" ")
+                        min_idx = i
+                        found = True
+                        break
+                if not found:
+                    min += 1
             # min_idx is the chosen workspace
-            self.use_ws(no_job, min_idx, min+1)
+            return self.use_ws(no_job, min_idx, min)
 
     # Abstraction of use_ws with lesser weight ws selection if available > 1 ws
     def use_lesser(self, no_job: int, start: int):
@@ -135,25 +161,52 @@ class Workstation:
             while not self.is_avail_at_time(num, start, start + self.list_jobs[no_job-1]):
                 i += 1
                 num = weight[i][0]
-            self.use_ws(no_job, num, start)
+            return self.use_ws(no_job, num, start)
         elif (count_avail == 1):
-            # Get the available one
+            # Get the first available one
             for i in range(self.num_total):
                 end = start + self.list_jobs[no_job-1]
                 if (self.is_avail_at_time(i, start, end)):
                     num = i
-            self.use_ws(no_job, num, start)
+            return self.use_ws(no_job, num, start)
         else:
             # No ws available currently, get the ws with fastest availability
-            min_idx = 0
-            min = self.busy_duration[0][len(self.busy_duration[0])-1][1]
-            for i in range(self.num_total):
-                if self.busy_duration[i][len(self.busy_duration[i])-1][1] < min:
-                    min = self.busy_duration[i][len(
-                        self.busy_duration[i])-1][1]
-                    min_idx = i
+            min = start
+            # min = self.busy_duration[0][len(self.busy_duration[0])-1][1]
+            # for i in range(self.num_total):
+            #     if self.busy_duration[i][len(self.busy_duration[i])-1][1] < min:
+            #         min = self.busy_duration[i][len(
+            #             self.busy_duration[i])-1][1]
+            #         min_idx = i
+            found = False
+            while not found:
+                print(min, end=" ")
+                for i in range(self.num_total):
+                    if self.is_avail_at_time(i, min, min + self.list_jobs[no_job-1]):
+                        print("B", end=" ")
+                        min_idx = i
+                        found = True
+                        break
+                if not found:
+                    min += 1
             # min_idx is the chosen workspace
-            self.use_ws(no_job, min_idx, min+1)
+            return self.use_ws(no_job, min_idx, min)
+
+    def show_workspace(self):
+        print(self.name)
+        for i in range(self.num_total):
+            print(f"Workspace {i+1}:", self.busy_duration[i])
+
+    def visualize_workspace(self, total: int):
+        print(self.name)
+        for i in range(self.num_total):
+            print("Workspace ", i + 1)
+            string = [str(j+1) for j in range(total)]
+            for j in self.busy_duration[i]:
+                for k in range(total):
+                    if k >= j[0] and k <= j[1]:
+                        string[k] = "X"
+            print(" ".join(string))
 
 
 def generate_workstation(num_WS1: int, num_WS2: int, num_WS3: int, num_jobs: int, t1: int, t2: int, t3: int) -> Workstation:
@@ -161,27 +214,29 @@ def generate_workstation(num_WS1: int, num_WS2: int, num_WS3: int, num_jobs: int
     n_WS2 = num_WS2
     n_WS3 = num_WS3
     n_jobs = num_jobs
-    job_WS1, job_WS2, job_WS3 = generate_list_of_jobs(
+    job_WS1, job_WS2, job_WS3, routing = generate_list_of_jobs(
         n_WS1, n_WS2, n_WS3, n_jobs)
 
     # Create a Workstation Object
-    WS1 = Workstation(num_WS1, job_WS1, t1)
-    WS2 = Workstation(num_WS2, job_WS2, t2)
-    WS3 = Workstation(num_WS3, job_WS3, t3)
+    WS1 = Workstation("WS1", num_WS1, job_WS1, t1)
+    WS2 = Workstation("WS2", num_WS2, job_WS2, t2)
+    WS3 = Workstation("WS3", num_WS3, job_WS3, t3)
 
-    return WS1, WS2, WS3
+    return WS1, WS2, WS3, routing
 
 
-WS1, WS2, WS3 = generate_workstation(1, 2, 3, 6, 0, 0, 0)
+WS1, WS2, WS3, routing = generate_workstation(1, 2, 3, 6, 0, 0, 0)
 WS1.use_random(1, 0)
-print(WS1.busy_duration)
-WS2.use_random(1, 0)
-WS2.use_random(2, 0)
-WS2.use_random(3, 11)
-print(WS2.busy_duration)
-# print(WS2.get_total_busy_duration(0), WS2.get_total_busy_duration(1))
-WS3.use_small(1, 0)
-WS3.use_small(2, 0)
-WS3.use_small(3, 0)
-WS3.use_lesser(4, 17)
-print(WS3.busy_duration)
+WS1.use_random(3, 0)
+WS1.show_workspace()
+# print(WS1.busy_duration)
+# WS2.use_random(1, 0)
+# WS2.use_random(2, 0)
+# WS2.use_random(3, 11)
+# print(WS2.busy_duration)
+# # print(WS2.get_total_busy_duration(0), WS2.get_total_busy_duration(1))
+# WS3.use_small(1, 0)
+# WS3.use_small(2, 0)
+# WS3.use_small(3, 0)
+# WS3.use_lesser(4, 17)
+# print(WS3.busy_duration)
