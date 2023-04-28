@@ -1,5 +1,12 @@
 from numpy import random
 from input import generate_list_of_jobs
+from enum import Enum
+
+
+class algo(Enum):
+    RANDOM = 1
+    WEIGHT = 2
+    SMALL = 3
 
 
 class Workstation:
@@ -209,6 +216,17 @@ class Workstation:
                     if k >= j[0] and k <= j[1]:
                         string[k] = "X"
             print(" ".join(string))
+
+    def use_on_algo(self, no_job: int, start: int, no_algo: algo):
+        if (no_algo == algo.RANDOM):
+            # print(self.name, "Use random")
+            return self.use_random(no_job, start)
+        elif (no_algo == algo.WEIGHT):
+            # print(self.name, "Use weight")
+            return self.use_lesser(no_job, start)
+        elif (no_algo == algo.SMALL and self.type == 0):
+            # print(self.name, "Use small")
+            return self.use_small(no_job, start)
 
 
 def generate_workstation(num_WS1: int, num_WS2: int, num_WS3: int, num_jobs: int, t1: int, t2: int, t3: int) -> Workstation:
