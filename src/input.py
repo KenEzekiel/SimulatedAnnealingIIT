@@ -32,6 +32,7 @@ def generate_list_of_jobs(num_WS1, num_WS2, num_WS3, num_job):
     start_WS1 = [start_col, start_row]
     start_WS2 = [chr(ord(start_WS1[0]) + n_WS1), 3]
     start_WS3 = [chr(ord(start_WS2[0]) + n_WS2), 3]
+    start_routing = [chr(ord(start_WS3[0]) + n_WS3), 3]
 
     # Check all start cells
     # print(start_WS1)
@@ -42,7 +43,7 @@ def generate_list_of_jobs(num_WS1, num_WS2, num_WS3, num_job):
     job_WS2 = []
     job_WS3 = []
 
-    def get_jobs(job_WS, start_WS, n_job):
+    def get_jobs(start_WS, n_job):
         all_num = []
         all_cell = []
         for i in range(n_job):
@@ -53,14 +54,18 @@ def generate_list_of_jobs(num_WS1, num_WS2, num_WS3, num_job):
 
     # Get all job data value from worksheet with all job cells
     job_WS1 = [round(ws[x].value, 2)
-               for x in get_jobs(job_WS1, start_WS1, n_job)]
+               for x in get_jobs(start_WS1, n_job)]
     job_WS2 = [round(ws[x].value, 2)
-               for x in get_jobs(job_WS2, start_WS2, n_job)]
+               for x in get_jobs(start_WS2, n_job)]
     job_WS3 = [round(ws[x].value, 2)
-               for x in get_jobs(job_WS3, start_WS3, n_job)]
+               for x in get_jobs(start_WS3, n_job)]
+    job_routing = [[int(i) for i in (ws[x].value).split(',')]
+                   for x in get_jobs(start_routing, n_job)]
 
+    print("Jobs and routing")
     print(job_WS1)
     print(job_WS2)
     print(job_WS3)
+    print(job_routing)
 
-    return job_WS1, job_WS2, job_WS3
+    return job_WS1, job_WS2, job_WS3, job_routing
