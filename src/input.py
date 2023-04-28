@@ -16,7 +16,9 @@ def print_active_worksheet(worksheet):
 
 def generate_list_of_jobs(num_WS1, num_WS2, num_WS3, num_job):
     # workbook = openpyxl.load_workbook("../data/DATA.xlsx")
-    workbook = openpyxl.load_workbook("../data/test_data.xlsx")
+    file = input(
+        "Masukkan nama file (pastikan file .xlsx sudah berada di folder data) (tanpa .xlsx) : ")
+    workbook = openpyxl.load_workbook(f"../data/{file}.xlsx")
 
     # Define variable to read the active sheet:
     ws = workbook.active
@@ -26,8 +28,8 @@ def generate_list_of_jobs(num_WS1, num_WS2, num_WS3, num_job):
     n_WS2 = num_WS2
     n_WS3 = num_WS3
     n_job = num_job
-    start_col = "B"
-    start_row = 3
+    start_col = input("Masukkan kolom dimulai job 1 WS 1 (cth: B) : ")
+    start_row = int(input("Masukkan baris dimulai job 1 WS 1 (cth: 3) : "))
 
     start_WS1 = [start_col, start_row]
     start_WS2 = [chr(ord(start_WS1[0]) + n_WS1), 3]

@@ -110,22 +110,38 @@ def start(T0: int, M: int, alpha: float, N: int, machine_algorithm: algo, worker
 # show = "Y" would show the workstations status at the min makespan
 # a, b = start(500, 400, 0.9, 2, machine_algorithm=algo(3),
 #              worker_algorithm=algo(1), show="Y")
-WS1, WS2, WS3, routing = generate_workstation(1, 2, 3, 6, 1, 0, 1)
+n_WS1 = int(builtins.input("Masukkan jumlah workspace pada WS1: "))
+n_WS2 = int(builtins.input("Masukkan jumlah workspace pada WS2: "))
+n_WS3 = int(builtins.input("Masukkan jumlah workspace pada WS3: "))
+n_jobs = int(builtins.input("Masukkan jumlah job: "))
+t1 = int(builtins.input("Masukkan tipe WS1 (0: Mesin, 1: Pekerja): "))
+t2 = int(builtins.input("Masukkan tipe WS2 (0: Mesin, 1: Pekerja): "))
+t3 = int(builtins.input("Masukkan tipe WS3 (0: Mesin, 1: Pekerja): "))
+
+
+WS1, WS2, WS3, routing = generate_workstation(
+    n_WS1, n_WS2, n_WS3, n_jobs, t1, t2, t3)
+
+T0 = int(builtins.input("T0: "))
+M = int(builtins.input("M: "))
+alpha = float(builtins.input("alpha: "))
+N = int(builtins.input("N: "))
+
 print("\nMachine : random, worker: random\n")
-a1, b1 = start(500, 400, 0.9, 2, machine_algorithm=algo(1),
+a1, b1 = start(T0, M, alpha, N, machine_algorithm=algo(1),
                worker_algorithm=algo(1))
 print("\nMachine : random, worker: weight\n")
-a2, b2 = start(500, 400, 0.9, 2, machine_algorithm=algo(1),
+a2, b2 = start(T0, M, alpha, N, machine_algorithm=algo(1),
                worker_algorithm=algo(2))
 print("\nMachine : weight, worker: random\n")
-a3, b3 = start(500, 400, 0.9, 2, machine_algorithm=algo(2),
+a3, b3 = start(T0, M, alpha, N, machine_algorithm=algo(2),
                worker_algorithm=algo(1))
 print("\nMachine : weight, worker: weight\n")
-a4, b4 = start(500, 400, 0.9, 2, machine_algorithm=algo(2),
+a4, b4 = start(T0, M, alpha, N, machine_algorithm=algo(2),
                worker_algorithm=algo(2))
 print("\nMachine : smaller, worker: random\n")
-a5, b5 = start(500, 400, 0.9, 2, machine_algorithm=algo(3),
+a5, b5 = start(T0, M, alpha, N, machine_algorithm=algo(3),
                worker_algorithm=algo(1))
 print("\nMachine : smaller, worker: weight\n")
-a6, b6 = start(500, 400, 0.9, 2, machine_algorithm=algo(3),
+a6, b6 = start(T0, M, alpha, N, machine_algorithm=algo(3),
                worker_algorithm=algo(2))
