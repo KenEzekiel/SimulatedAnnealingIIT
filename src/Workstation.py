@@ -66,10 +66,20 @@ class Workstation:
                     num = i
             self.use_ws(no_job, num, start)
         else:
-            # No ws available
-            return
+            # No ws available currently, get the ws with fastest availability
+            min_idx = 0
+            min = self.busy_duration[0][len(self.busy_duration[0])-1][1]
+            for i in range(self.num_total):
+                print(min, min_idx)
+                if self.busy_duration[i][len(self.busy_duration[i])-1][1] < min:
+                    min = self.busy_duration[i][len(
+                        self.busy_duration[i])-1][1]
+                    min_idx = i
+            # min_idx is the chosen workspace
+            self.use_ws(no_job, min_idx, min+1)
 
     # Abstraction of use_ws with small ws selection if available > 1 ws
+
     def use_small(self, no_job: int, start: int):
         count_avail = self.count_available(start, no_job)
         if (count_avail > 1):
@@ -88,14 +98,25 @@ class Workstation:
                     num = i
             self.use_ws(no_job, num, start)
         else:
-            # No ws available
-            return
+
+            # No ws available currently, get the ws with fastest availability
+            min_idx = 0
+            min = self.busy_duration[0][len(self.busy_duration[0])-1][1]
+            for i in range(self.num_total):
+                print(min, min_idx)
+                if self.busy_duration[i][len(self.busy_duration[i])-1][1] < min:
+                    min = self.busy_duration[i][len(
+                        self.busy_duration[i])-1][1]
+                    min_idx = i
+            # min_idx is the chosen workspace
+            self.use_ws(no_job, min_idx, min+1)
 
     # Abstraction of use_ws with lesser weight ws selection if available > 1 ws
     def use_lesser(self, no_job: int, start: int):
         count_avail = self.count_available(start, no_job)
         if (count_avail > 1):
             # calculate weight then get the smallest weight
+            weight = []
             # num is the chosen workspace
             self.use_ws(no_job, num, start)
         elif (count_avail == 1):
@@ -106,8 +127,17 @@ class Workstation:
                     num = i
             self.use_ws(no_job, num, start)
         else:
-            # No ws available
-            return
+            # No ws available currently, get the ws with fastest availability
+            min_idx = 0
+            min = self.busy_duration[0][len(self.busy_duration[0])-1][1]
+            for i in range(self.num_total):
+                print(min, min_idx)
+                if self.busy_duration[i][len(self.busy_duration[i])-1][1] < min:
+                    min = self.busy_duration[i][len(
+                        self.busy_duration[i])-1][1]
+                    min_idx = i
+            # min_idx is the chosen workspace
+            self.use_ws(no_job, min_idx, min+1)
 
 
 def generate_workstation(num_WS1: int, num_WS2: int, num_WS3: int, num_jobs: int, t1: int, t2: int, t3: int) -> Workstation:
@@ -131,5 +161,5 @@ WS1.use_random(1, 0)
 print(WS1.busy_duration)
 WS2.use_random(1, 0)
 WS2.use_random(2, 0)
-WS2.use_random(3, 12)
+WS2.use_random(3, 11)
 print(WS2.busy_duration)
