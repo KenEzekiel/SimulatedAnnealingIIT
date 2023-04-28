@@ -1,9 +1,9 @@
 import builtins
-import input
 from Workstation import Workstation, generate_workstation, algo
 from numpy import random
 import math
 from copy import deepcopy
+from colors import bcolors
 
 
 def run_sequence(sequence: list, routing: list, WS1, WS2, WS3, machine_algo, worker_algo) -> int:
@@ -61,13 +61,17 @@ def start(T0: int, M: int, alpha: float, N: int, machine_algorithm: algo, worker
             #  random swap a job
             success = False
             while not success:
+                # Pick a number
                 idx_1 = random.randint(100) % len(sequence)
                 idx_2 = random.randint(100) % len(sequence)
                 if (idx_1 != idx_2):
                     success = True
+                    print(sequence, end=" -> ")
                     temp = sequence[idx_1]
                     sequence[idx_1] = sequence[idx_2]
                     sequence[idx_2] = temp
+                    print(
+                        sequence, f"swapped index {idx_1} with index {idx_2}")
 
             makespan = run_sequence(
                 sequence, routing, WS1, WS2, WS3, machine_algorithm, worker_algorithm)
@@ -76,9 +80,9 @@ def start(T0: int, M: int, alpha: float, N: int, machine_algorithm: algo, worker
             if (deltaE < 0):
                 min_makespan = makespan
                 min_sequence = sequence
-                min_ws1 = WS1
-                min_ws2 = WS2
-                min_ws3 = WS3
+                min_ws1 = deepcopy(WS1)
+                min_ws2 = deepcopy(WS2)
+                min_ws3 = deepcopy(WS3)
             else:
                 p = math.e**(((-1) * deltaE)/m)
                 r = random.randint(100)/100
@@ -96,12 +100,15 @@ def start(T0: int, M: int, alpha: float, N: int, machine_algorithm: algo, worker
     print("min makespan:", min_makespan, "\nmin sequence:", min_sequence)
     # show = builtins.input("show workstation status? (Y/N) : ")
     if show == "Y" or show == "y":
+        print(bcolors.OKGREEN + bcolors.BOLD +
+              "\n======================== Workstation Status ========================\n" + bcolors.ENDC)
         min_ws1.show_workspace()
         min_ws2.show_workspace()
         min_ws3.show_workspace()
         min_ws3.visualize_workspace(min_makespan)
         min_ws2.visualize_workspace(min_makespan)
         min_ws1.visualize_workspace(min_makespan)
+        print("")
     return min_makespan, min_sequence
 
 
@@ -126,22 +133,29 @@ T0 = int(builtins.input("T0: "))
 M = int(builtins.input("M: "))
 alpha = float(builtins.input("alpha: "))
 N = int(builtins.input("N: "))
+show = builtins.input("show: ")
 
-print("\nMachine : random, worker: random\n")
+print(bcolors.FAIL + bcolors.BOLD +
+      "\nMachine : random, worker: random\n" + bcolors.ENDC)
 a1, b1 = start(T0, M, alpha, N, machine_algorithm=algo(1),
-               worker_algorithm=algo(1))
-print("\nMachine : random, worker: weight\n")
+               worker_algorithm=algo(1), show=show)
+print(bcolors.FAIL + bcolors.BOLD +
+      "\nMachine : random, worker: weight\n" + bcolors.ENDC)
 a2, b2 = start(T0, M, alpha, N, machine_algorithm=algo(1),
-               worker_algorithm=algo(2))
-print("\nMachine : weight, worker: random\n")
+               worker_algorithm=algo(2), show=show)
+print(bcolors.FAIL + bcolors.BOLD +
+      "\nMachine : weight, worker: random\n" + bcolors.ENDC)
 a3, b3 = start(T0, M, alpha, N, machine_algorithm=algo(2),
-               worker_algorithm=algo(1))
-print("\nMachine : weight, worker: weight\n")
+               worker_algorithm=algo(1), show=show)
+print(bcolors.FAIL + bcolors.BOLD +
+      "\nMachine : weight, worker: weight\n" + bcolors.ENDC)
 a4, b4 = start(T0, M, alpha, N, machine_algorithm=algo(2),
-               worker_algorithm=algo(2))
-print("\nMachine : smaller, worker: random\n")
+               worker_algorithm=algo(2), show=show)
+print(bcolors.FAIL + bcolors.BOLD +
+      "\nMachine : smaller, worker: random\n" + bcolors.ENDC)
 a5, b5 = start(T0, M, alpha, N, machine_algorithm=algo(3),
-               worker_algorithm=algo(1))
-print("\nMachine : smaller, worker: weight\n")
+               worker_algorithm=algo(1), show=show)
+print(bcolors.FAIL + bcolors.BOLD +
+      "\nMachine : smaller, worker: weight\n" + bcolors.ENDC)
 a6, b6 = start(T0, M, alpha, N, machine_algorithm=algo(3),
-               worker_algorithm=algo(2))
+               worker_algorithm=algo(2), show=show)
