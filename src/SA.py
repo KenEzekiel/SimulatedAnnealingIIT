@@ -46,10 +46,9 @@ def run_sequence(sequence: list, routing: list, WS1, WS2, WS3, machine_algo, wor
     return max(end1, end2, end3), listjobs
 
 
-def start(T0: float, M: float, alpha: float, N: int, machine_algorithm: algo, worker_algorithm: algo, show: str = "N"):
+def start(T0: float, M: float, alpha: float, N: int, machine_algorithm: algo, worker_algorithm: algo, show: str = "N", start_sequence: list = []):
 
-    sequence = [1, 2, 3, 4, 5, 6]
-    random.shuffle(sequence)
+    sequence = deepcopy(start_sequence)
     min_sequence = sequence
     T = T0
 
@@ -152,30 +151,33 @@ alpha = float(builtins.input("alpha: "))
 N = int(builtins.input("N: "))
 show = builtins.input("show: ")
 
+sequence = [1, 2, 3, 4, 5, 6]
+random.shuffle(sequence)
+
 print(bcolors.FAIL + bcolors.BOLD +
       "\nMachine : random, worker: random\n" + bcolors.ENDC)
 a1, b1, c1 = start(T0, M, alpha, N, machine_algorithm=algo(1),
-                   worker_algorithm=algo(1), show=show)
+                   worker_algorithm=algo(1), show=show, start_sequence=sequence)
 print(bcolors.FAIL + bcolors.BOLD +
       "\nMachine : random, worker: weight\n" + bcolors.ENDC)
 a2, b2, c2 = start(T0, M, alpha, N, machine_algorithm=algo(1),
-                   worker_algorithm=algo(2), show=show)
+                   worker_algorithm=algo(2), show=show, start_sequence=sequence)
 print(bcolors.FAIL + bcolors.BOLD +
       "\nMachine : weight, worker: random\n" + bcolors.ENDC)
 a3, b3, c3 = start(T0, M, alpha, N, machine_algorithm=algo(2),
-                   worker_algorithm=algo(1), show=show)
+                   worker_algorithm=algo(1), show=show, start_sequence=sequence)
 print(bcolors.FAIL + bcolors.BOLD +
       "\nMachine : weight, worker: weight\n" + bcolors.ENDC)
 a4, b4, c4 = start(T0, M, alpha, N, machine_algorithm=algo(2),
-                   worker_algorithm=algo(2), show=show)
+                   worker_algorithm=algo(2), show=show, start_sequence=sequence)
 print(bcolors.FAIL + bcolors.BOLD +
       "\nMachine : smaller, worker: random\n" + bcolors.ENDC)
 a5, b5, c5 = start(T0, M, alpha, N, machine_algorithm=algo(3),
-                   worker_algorithm=algo(1), show=show)
+                   worker_algorithm=algo(1), show=show, start_sequence=sequence)
 print(bcolors.FAIL + bcolors.BOLD +
       "\nMachine : smaller, worker: weight\n" + bcolors.ENDC)
 a6, b6, c6 = start(T0, M, alpha, N, machine_algorithm=algo(3),
-                   worker_algorithm=algo(2), show=show)
+                   worker_algorithm=algo(2), show=show, start_sequence=sequence)
 
 list_result = [a1, a2, a3, a4, a5, a6]
 
