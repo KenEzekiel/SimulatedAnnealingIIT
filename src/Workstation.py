@@ -78,6 +78,7 @@ class Workstation:
 
     # Abstraction of use_ws with random ws selection if available > 1 ws
     def use_random(self, no_job: int, start: int):
+        num: int = 0  # Placeholder assignment
         count_avail = self.count_available(start, no_job)
         if (count_avail > 1):
             # pick random number between 0 and self.num_total which is available
@@ -87,14 +88,14 @@ class Workstation:
                 if self.is_avail_at_time(num, start, start + self.list_jobs[no_job-1]):
                     success = True
             # num is the chosen workspace
-            return self.use_ws(no_job, num, start)
+            return self.use_ws(no_job, num, start), num
         elif (count_avail == 1):
             # Get the first available one
             for i in range(self.num_total):
                 end = start + self.list_jobs[no_job-1]
                 if (self.is_avail_at_time(i, start, end)):
                     num = i
-            return self.use_ws(no_job, num, start)
+            return self.use_ws(no_job, num, start), num
         else:
             # No ws available currently, get the ws with fastest availability
             min = start
@@ -114,11 +115,12 @@ class Workstation:
                 if not found:
                     min += 1
             # min_idx is the chosen workspace
-            return self.use_ws(no_job, min_idx, min)
+            return self.use_ws(no_job, min_idx, min), num
 
     # Abstraction of use_ws with small ws selection if available > 1 ws
 
     def use_small(self, no_job: int, start: int):
+        num: int = 0  # Placeholder assignment
         count_avail = self.count_available(start, no_job)
         if (count_avail > 1):
             for i in range(self.num_total):
@@ -127,14 +129,14 @@ class Workstation:
                     num = i
                     break
             # num is the chosen workspace
-            return self.use_ws(no_job, num, start)
+            return self.use_ws(no_job, num, start), num
         elif (count_avail == 1):
             # Get the first available one
             for i in range(self.num_total):
                 end = start + self.list_jobs[no_job-1]
                 if (self.is_avail_at_time(i, start, end)):
                     num = i
-            return self.use_ws(no_job, num, start)
+            return self.use_ws(no_job, num, start), num
         else:
             # No ws available currently, get the ws with fastest availability
             min = start
@@ -154,10 +156,11 @@ class Workstation:
                 if not found:
                     min += 1
             # min_idx is the chosen workspace
-            return self.use_ws(no_job, min_idx, min)
+            return self.use_ws(no_job, min_idx, min), num
 
     # Abstraction of use_ws with lesser weight ws selection if available > 1 ws
     def use_lesser(self, no_job: int, start: int):
+        num: int = 0  # Placeholder assignment
         count_avail = self.count_available(start, no_job)
         if (count_avail > 1):
             # calculate weight then get the smallest weight
@@ -175,14 +178,14 @@ class Workstation:
             while not self.is_avail_at_time(num, start, start + self.list_jobs[no_job-1]):
                 i += 1
                 num = weight[i][0]
-            return self.use_ws(no_job, num, start)
+            return self.use_ws(no_job, num, start), num
         elif (count_avail == 1):
             # Get the first available one
             for i in range(self.num_total):
                 end = start + self.list_jobs[no_job-1]
                 if (self.is_avail_at_time(i, start, end)):
                     num = i
-            return self.use_ws(no_job, num, start)
+            return self.use_ws(no_job, num, start), num
         else:
             # No ws available currently, get the ws with fastest availability
             min = start
@@ -202,7 +205,7 @@ class Workstation:
                 if not found:
                     min += 1
             # min_idx is the chosen workspace
-            return self.use_ws(no_job, min_idx, min)
+            return self.use_ws(no_job, min_idx, min), num
 
     def show_workspace(self):
         print(self.name)
