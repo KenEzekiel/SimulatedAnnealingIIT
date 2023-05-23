@@ -49,7 +49,7 @@ def run_sequence(sequence: list, routing: list, WS1, WS2, WS3, machine_algo, wor
 def start(T0: float, M: float, alpha: float, N: int, machine_algorithm: algo, worker_algorithm: algo, show: str = "N", start_sequence: list = []):
 
     sequence = deepcopy(start_sequence)
-    min_sequence = sequence
+    min_sequence = deepcopy(sequence)
     T = T0
 
     init_makespan, init_listjobs = run_sequence(sequence, routing, WS1, WS2,
@@ -67,8 +67,12 @@ def start(T0: float, M: float, alpha: float, N: int, machine_algorithm: algo, wo
     min_listjobs = init_listjobs
 
     m = T0
+    solution_avail = False
     while m > M:
+        print("m:", m)
         for n in range(N):
+            acc = False
+            prev_sequence = deepcopy(sequence)
             #  random swap a job
             success = False
             while not success:
@@ -87,12 +91,14 @@ def start(T0: float, M: float, alpha: float, N: int, machine_algorithm: algo, wo
             makespan, listjobs = run_sequence(
                 sequence, routing, WS1, WS2, WS3, machine_algorithm, worker_algorithm)
             makespan = round(makespan, 3)
-            # print(sequence, makespan)
+            # print("sequence makespan", sequence, makespan)
             deltaE = makespan - min_makespan
             if (deltaE < 0):
-                min_makespan = makespan
-                min_sequence = sequence
-                min_listjobs = listjobs
+                acc = True
+                solution_avail = True
+                min_makespan = deepcopy(makespan)
+                min_sequence = deepcopy(sequence)
+                min_listjobs = deepcopy(listjobs)
                 min_ws1 = deepcopy(WS1)
                 min_ws2 = deepcopy(WS2)
                 min_ws3 = deepcopy(WS3)
@@ -100,12 +106,16 @@ def start(T0: float, M: float, alpha: float, N: int, machine_algorithm: algo, wo
                 p = math.e**(((-1) * deltaE)/m)
                 r = random.randint(100)/100
                 if (p > r):
-                    min_makespan = makespan
-                    min_sequence = sequence
-                    min_listjobs = listjobs
-                    min_ws1 = deepcopy(WS1)
-                    min_ws2 = deepcopy(WS2)
-                    min_ws3 = deepcopy(WS3)
+                    acc = True
+                    # min_makespan = makespan
+                    # min_sequence = sequence
+                    # min_listjobs = listjobs
+                    # min_ws1 = deepcopy(WS1)
+                    # min_ws2 = deepcopy(WS2)
+                    # min_ws3 = deepcopy(WS3)
+            if not acc:
+                sequence = deepcopy(prev_sequence)
+                print("Solution not accepted, reverting to previous sequence", sequence)
             WS1.reset()
             WS2.reset()
             WS3.reset()
@@ -115,7 +125,7 @@ def start(T0: float, M: float, alpha: float, N: int, machine_algorithm: algo, wo
     for i in min_listjobs:
         i.print()
     # show = builtins.input("show workstation status? (Y/N) : ")
-    if show == "Y" or show == "y":
+    if (show == "Y" or show == "y") and solution_avail:
         print(bcolors.OKGREEN + bcolors.BOLD +
               "\n======================== Workstation Status ========================\n" + bcolors.ENDC)
         min_ws1.show_workspace()
@@ -125,6 +135,8 @@ def start(T0: float, M: float, alpha: float, N: int, machine_algorithm: algo, wo
         min_ws2.visualize_workspace(min_makespan)
         min_ws1.visualize_workspace(min_makespan)
         print("")
+    if not solution_avail:
+        print(bcolors.WARNING + bcolors.BOLD + "\nNo solution chosen\n" + bcolors.ENDC)
     return min_makespan, min_sequence, min_listjobs
 
 
